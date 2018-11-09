@@ -1,5 +1,6 @@
 package uet.oop.bomberman;
 
+import developGame.sound;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Message;
 import uet.oop.bomberman.entities.bomb.Bomb;
@@ -104,11 +105,13 @@ public class Board implements IRender {
 		_characters.clear();
 		_bombs.clear();
 		_messages.clear();
-                 try{
-                    _game.OpenFileMusic("04_Level 1.wav");
-                }catch(InterruptedException e){
-                    System.out.println(e.getMessage());
-                }
+//                 try{
+//                    _game.ostGame = new sound("04_Level 1.wav");
+//                    _game.ostGame.CloseMusic();
+//                    _game.ostGame.OpenFileMusic();
+//                }catch(InterruptedException e){
+//                    System.out.println(e.getMessage());
+//                }
 		
 		try {
 			_levelLoader = new FileLevelLoader(this, level);
