@@ -1,6 +1,6 @@
 package uet.oop.bomberman;
 
-import developGame.sound;
+import developGame.Audios;
 import uet.oop.bomberman.graphics.Screen;
 import uet.oop.bomberman.gui.Frame;
 import uet.oop.bomberman.input.Keyboard;
@@ -9,12 +9,7 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.concurrent.TimeUnit;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
+
 
 /**
  * Tạo vòng lặp cho game, lưu trữ một vài tham số cấu hình toàn cục,
@@ -30,7 +25,7 @@ public class Game extends Canvas {
 	
 	public static final String TITLE = "BombermanGame";
 	// sửa số bomb.
-	private static final int BOMBRATE = 3;
+	private static final int BOMBRATE = 1;
 	private static final int BOMBRADIUS = 1;
 	private static final double BOMBERSPEED = 1.0;
 	
@@ -57,8 +52,10 @@ public class Game extends Canvas {
 	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
 
+        //public int _live;
         // thuộc tính âm thanh. 
-        public sound ostGame; 
+        public Audios ostGame = new Audios("04_Level 1.wav", true); 
+      
         
 	public Game(Frame frame) {
 		_frame = frame;
@@ -68,9 +65,9 @@ public class Game extends Canvas {
 		_input = new Keyboard();
 		
 		_board = new Board(this, _input, screen);
+                //_live=3;
 		addKeyListener(_input);
                 
-                // khởi tạo âm thanh game. 
 	}
 	
 	
@@ -117,19 +114,20 @@ public class Game extends Canvas {
 
 	private void update() {
 		_input.update();
-		_board.update();
+               if(_input.space && _screenDelay==3)
+               {
+                   //_live--;
+                   _board.restartLevel();
+               }
+                else
+                   _board.update();
 	}
 	
 	public void start() {
 		_running = true;
-		// add serfdom play music. 
-//                try{
-//                    ostGame = new sound("04_Level 1.wav"); 
-//                    ostGame.CloseMusic();
-//                    ostGame.OpenFileMusic();
-//                }catch(InterruptedException e){
-//                    System.out.println(e.getMessage());
-//                }
+                
+                ostGame.Player();
+		
                 // the end serfdom. 
 		long  lastTime = System.nanoTime();
 		long timer = System.currentTimeMillis();
@@ -210,8 +208,9 @@ public class Game extends Canvas {
 	}
 	
 	public void pause() {
-                // add chức năng tắt nhạc. 
-                ostGame.CloseMusic();
+                // add chức năng tắt nhạc.
+                
+                ostGame.PauseAudio();
                 // ... 
 		_paused = true;
                 

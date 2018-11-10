@@ -1,5 +1,6 @@
 package uet.oop.bomberman.entities.character;
 
+import developGame.Audios;
 import java.util.ArrayList;
 import uet.oop.bomberman.Board;
 import uet.oop.bomberman.Game;
@@ -20,7 +21,6 @@ public class Bomber extends Character {
 
     private List<Bomb> _bombs;
     protected Keyboard _input;
-
     /**
      * nếu giá trị này < 0 thì cho phép đặt đối tượng Bomb tiếp theo,
      * cứ mỗi lần đặt 1 Bomb mới, giá trị này sẽ được reset về 0 và giảm dần trong mỗi lần update()
@@ -28,6 +28,9 @@ public class Bomber extends Character {
     protected int _timeBetweenPutBombs = 0;
     //list Item of bomber.
     public static List<Item> _listItem = new ArrayList<Item>();
+    // am thanh. 
+    Audios soundIcon     = new Audios("icongame.wav",false); 
+    Audios soundPutBomb  = new Audios("putBomb.wav", false); 
     
     public Bomber(int x, int y, Board board) {
         super(x, y, board);
@@ -83,7 +86,7 @@ public class Bomber extends Character {
         // TODO: nếu 3 điều kiện trên thỏa mãn thì thực hiện đặt bom bằng placeBomb()
         // TODO: sau khi đặt, nhớ giảm số lượng Bomb Rate và reset _timeBetweenPutBombs về 0
         if(_input.space && Game.getBombRate() > 0 && _timeBetweenPutBombs < 0) {
-			
+		
                 int xt = Coordinates.pixelToTile(_x + _sprite.getSize() / 2);
                 int yt = Coordinates.pixelToTile( (_y + _sprite.getSize() / 2) - _sprite.getSize() ); //subtract half player height and minus 1 y position
                 
@@ -91,6 +94,9 @@ public class Bomber extends Character {
                     placeBomb(xt, yt);
                     Game.addBombRate(-1);
                     _timeBetweenPutBombs = 30;
+                    
+                    // add thêm chế độ âm thanh.
+                    soundPutBomb.playAgain();                  
                 }
         }
     }
@@ -264,7 +270,12 @@ public class Bomber extends Character {
     // add hadling eating Item. 
     public void addPowerup(Item p) {
         if(p.isRemoved()) return;
-
+//        soundIcon.StopAudio();
+        if (_listItem.size() == 0){
+            soundIcon.Player();
+        }else{
+            soundIcon.playAgain();
+        }
         _listItem.add(p);
 
         p.setValues();
@@ -286,5 +297,4 @@ public class Bomber extends Character {
         }
         
     }
-
 }

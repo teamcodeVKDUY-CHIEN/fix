@@ -38,7 +38,8 @@ public class Board implements IRender {
 	
 	private int _time = Game.TIME;
 	private int _points = Game.POINTS;
-	
+
+        
 	public Board(Game game, Keyboard input, Screen screen) {
 		_game = game;
 		_input = input;
@@ -55,7 +56,7 @@ public class Board implements IRender {
 		updateCharacters();
 		updateBombs();
 		updateMessages();
-		detectEndGame();
+                detectEndGame();
 		
 		for (int i = 0; i < _characters.size(); i++) {
 			Character a = _characters.get(i);
@@ -83,17 +84,14 @@ public class Board implements IRender {
 		renderCharacter(screen);
 		
 	}
-	
-//        public void newGame() {
-//		resetProperties();
-//		nextLevel();
-//	}
         
         public void restartLevel() {
-		loadLevel(_levelLoader.getLevel());
+            _game.ostGame.Player();
+            loadLevel(_levelLoader.getLevel());
 	}
         
 	public void nextLevel() {
+                _game.ostGame.playAgain();
 		loadLevel(_levelLoader.getLevel() + 1);
 	}
 	
@@ -116,8 +114,8 @@ public class Board implements IRender {
 		try {
 			_levelLoader = new FileLevelLoader(this, level);
 			_entities = new Entity[_levelLoader.getHeight() * _levelLoader.getWidth()];
-			
 			_levelLoader.createEntities();
+                        
 		} catch (LoadLevelException e) {
 			endGame();
 		}
@@ -126,8 +124,6 @@ public class Board implements IRender {
 	protected void detectEndGame() {
 		if(_time <= 0)
                     endGame();
-                else if(_game._screenDelay==3)
-                    restartLevel();
 	}
 	
 	public void endGame() {
